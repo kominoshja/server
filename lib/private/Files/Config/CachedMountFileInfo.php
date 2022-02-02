@@ -30,8 +30,17 @@ class CachedMountFileInfo extends CachedMountInfo implements ICachedMountFileInf
 	/** @var string */
 	private $internalPath;
 
-	public function __construct(IUser $user, $storageId, $rootId, $mountPoint, $mountId, $rootInternalPath, $internalPath) {
-		parent::__construct($user, $storageId, $rootId, $mountPoint, $mountId, $rootInternalPath);
+	public function __construct(
+		IUser $user,
+		int $storageId,
+		int $rootId,
+		string $mountPoint,
+		$mountId,
+		string $mountProvider,
+		string $rootInternalPath,
+		string $internalPath
+	) {
+		parent::__construct($user, $storageId, $rootId, $mountPoint, $mountProvider, $mountId, $rootInternalPath);
 		$this->internalPath = $internalPath;
 	}
 
