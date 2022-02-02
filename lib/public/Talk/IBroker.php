@@ -69,6 +69,6 @@ interface IBroker {
 	 * @since 24.0.0
 	 */
 	public function createConversation(string $name,
-									   array $moderators = [],
+									   array $moderators,
 									   IConversationOptions $options = null): IConversation;
 }
