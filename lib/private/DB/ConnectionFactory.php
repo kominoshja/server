@@ -196,16 +196,16 @@ class ConnectionFactory {
 		$type = $this->config->getValue('dbtype', 'sqlite');
 
 		$connectionParams = [
-			'user' => $this->config->getValue($configPrefix . 'dbuser', ''),
-			'password' => $this->config->getValue($configPrefix . 'dbpassword', ''),
+			'user' => $this->config->getValue($configPrefix . 'dbuser', $this->config->getValue('dbuser', '')),
+			'password' => $this->config->getValue($configPrefix . 'dbpassword', $this->config->getValue('dbpassword', '')),
 		];
-		$name = $this->config->getValue($configPrefix . 'dbname', self::DEFAULT_DBNAME);
+		$name = $this->config->getValue($configPrefix . 'dbname', $this->config->getValue('dbname', self::DEFAULT_DBNAME));
 
 		if ($this->normalizeType($type) === 'sqlite3') {
 			$dataDir = $this->config->getValue("datadirectory", \OC::$SERVERROOT . '/data');
 			$connectionParams['path'] = $dataDir . '/' . $name . '.db';
 		} else {
-			$host = $this->config->getValue($configPrefix . 'dbhost', '');
+			$host = $this->config->getValue($configPrefix . 'dbhost', $this->config->getValue('dbhost', ''));
 			$connectionParams = array_merge($connectionParams, $this->splitHostFromPortAndSocket($host));
 			$connectionParams['dbname'] = $name;
 		}
@@ -214,7 +214,7 @@ class ConnectionFactory {
 		$connectionParams['sqlite.journal_mode'] = $this->config->getValue('sqlite.journal_mode', 'WAL');
 
 		//additional driver options, eg. for mysql ssl
-		$driverOptions = $this->config->getValue($configPrefix . 'dbdriveroptions', null);
+		$driverOptions = $this->config->getValue($configPrefix . 'dbdriveroptions', $this->config->getValue('dbdriveroptions', null));
 		if ($driverOptions) {
 			$connectionParams['driverOptions'] = $driverOptions;
 		}
