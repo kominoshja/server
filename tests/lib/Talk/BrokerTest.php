@@ -38,7 +38,6 @@ use RuntimeException;
 use Test\TestCase;
 
 class BrokerTest extends TestCase {
-
 	private Coordinator $coordinator;
 
 	private IServerContainer $container;
@@ -149,5 +148,4 @@ class BrokerTest extends TestCase {
 			$options
 		);
 	}
-
 }

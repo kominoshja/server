@@ -29,11 +29,9 @@ use OC\Talk\ConversationOptions;
 use Test\TestCase;
 
 class ConversationOptionsTest extends TestCase {
-
 	public function testDefaults(): void {
 		ConversationOptions::default();
 
 		$this->addToAssertionCount(1);
 	}
-
 }
