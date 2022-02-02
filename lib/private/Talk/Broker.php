@@ -62,32 +62,37 @@ class Broker implements IBroker {
 	}
 
 	public function hasBackend(): bool {
-		if ($this->hasBackend === null) {
-			$context = $this->coordinator->getRegistrationContext();
-			if ($context === null) {
-				// Backend requested too soon, e.g. from the bootstrap `register` method of an app
-				throw new RuntimeException("Not all apps have been registered yet");
-			}
-			$backendRegistration = $context->getTalkBackendRegistration();
-			if ($backendRegistration === null) {
-				// Nothing to do. Remember and exit.
-				return $this->hasBackend = false;
-			}
-
-			try {
-				$this->backend = $this->container->get(
-					$backendRegistration->getService()
-				);
-				$this->hasBackend = true;
-			} catch (Throwable $e) {
-				$this->logger->error("Talk backend {class} could not be loaded: " . $e->getMessage(), [
-					'class' => $backendRegistration->getService(),
-					'exception' => $e,
-				]);
-			}
+		if ($this->hasBackend !== null) {
+			return $this->hasBackend;
 		}
 
-		return $this->hasBackend;
+		$context = $this->coordinator->getRegistrationContext();
+		if ($context === null) {
+			// Backend requested too soon, e.g. from the bootstrap `register` method of an app
+			throw new RuntimeException("Not all apps have been registered yet");
+		}
+		$backendRegistration = $context->getTalkBackendRegistration();
+		if ($backendRegistration === null) {
+			// Nothing to do. Remember and exit.
+			return $this->hasBackend = false;
+		}
+
+		try {
+			$this->backend = $this->container->get(
+				$backendRegistration->getService()
+			);
+
+			// Remember and return
+			return $this->hasBackend = true;
+		} catch (Throwable $e) {
+			$this->logger->error("Talk backend {class} could not be loaded: " . $e->getMessage(), [
+				'class' => $backendRegistration->getService(),
+				'exception' => $e,
+			]);
+
+			// Temporary result. Maybe the next time the backend is requested it can be loaded.
+			return false;
+		}
 	}
 
 	public function newConversationOptions(): IConversationOptions {
