@@ -31,6 +31,14 @@ namespace OCP\Talk;
 interface IConversationOptions {
 
 	/**
+	 * Will the conversation be public?
+	 *
+	 * @return bool
+	 * @since 24.0.0
+	 */
+	public function isPublic(): bool;
+
+	/**
 	 * Make the new conversation public
 	 *
 	 * @param bool $isPublic

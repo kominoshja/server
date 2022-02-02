@@ -41,12 +41,12 @@ interface ITalkBackend {
 	/**
 	 * @param string $name
 	 * @param IUser[] $moderators
-	 * @param IConversationOptions|null $options optional configuration for the conversation
+	 * @param IConversationOptions $options configuration for the conversation
 	 *
 	 * @return IConversation
 	 * @since 24.0.0
 	 */
 	public function createConversation(string $name,
-									   array $moderators = [],
-									   IConversationOptions $options = null): IConversation;
+									   array $moderators,
+									   IConversationOptions $options): IConversation;
 }

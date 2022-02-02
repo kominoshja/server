@@ -99,13 +99,17 @@ class Broker implements IBroker {
 		return ConversationOptions::default();
 	}
 
-	public function createConversation(string               $name,
-									   array                $moderators = [],
+	public function createConversation(string $name,
+									   array $moderators,
 									   IConversationOptions $options = null): IConversation {
 		if (!$this->hasBackend()) {
 			throw new NoBackendException("The Talk broker has no registered backend");
 		}
 
-		return $this->backend->createConversation($name, $moderators, $options);
+		return $this->backend->createConversation(
+			$name,
+			$moderators,
+			$options ?? ConversationOptions::default()
+		);
 	}
 }
