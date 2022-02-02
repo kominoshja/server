@@ -189,22 +189,23 @@ class ConnectionFactory {
 	/**
 	 * Create the connection parameters for the config
 	 *
+	 * @param string $configPrefix
 	 * @return array
 	 */
-	public function createConnectionParams() {
+	public function createConnectionParams(string $configPrefix = '', string $wrapperClass = '', string $wrapperClassOracle = '') {
 		$type = $this->config->getValue('dbtype', 'sqlite');
 
 		$connectionParams = [
-			'user' => $this->config->getValue('dbuser', ''),
-			'password' => $this->config->getValue('dbpassword', ''),
+			'user' => $this->config->getValue($configPrefix . 'dbuser', ''),
+			'password' => $this->config->getValue($configPrefix . 'dbpassword', ''),
 		];
-		$name = $this->config->getValue('dbname', self::DEFAULT_DBNAME);
+		$name = $this->config->getValue($configPrefix . 'dbname', self::DEFAULT_DBNAME);
 
 		if ($this->normalizeType($type) === 'sqlite3') {
 			$dataDir = $this->config->getValue("datadirectory", \OC::$SERVERROOT . '/data');
 			$connectionParams['path'] = $dataDir . '/' . $name . '.db';
 		} else {
-			$host = $this->config->getValue('dbhost', '');
+			$host = $this->config->getValue($configPrefix . 'dbhost', '');
 			$connectionParams = array_merge($connectionParams, $this->splitHostFromPortAndSocket($host));
 			$connectionParams['dbname'] = $name;
 		}
@@ -213,7 +214,7 @@ class ConnectionFactory {
 		$connectionParams['sqlite.journal_mode'] = $this->config->getValue('sqlite.journal_mode', 'WAL');
 
 		//additional driver options, eg. for mysql ssl
-		$driverOptions = $this->config->getValue('dbdriveroptions', null);
+		$driverOptions = $this->config->getValue($configPrefix . 'dbdriveroptions', null);
 		if ($driverOptions) {
 			$connectionParams['driverOptions'] = $driverOptions;
 		}
@@ -230,6 +231,14 @@ class ConnectionFactory {
 				'charset' => 'utf8mb4',
 				'tablePrefix' => $connectionParams['tablePrefix']
 			];
+		}
+
+		if ($wrapperClass !== '') {
+			if ($this->normalizeType($type) !== 'oci') {
+				$connectionParams['wrapperClass'] = $wrapperClass;
+			} else {
+				$connectionParams['wrapperClass'] = $wrapperClassOracle;
+			}
 		}
 
 		return $connectionParams;
