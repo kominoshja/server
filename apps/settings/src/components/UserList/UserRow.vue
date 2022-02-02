@@ -219,7 +219,7 @@
 					</ActionButton>
 				</Actions>
 				<div v-click-outside="hideMenu" class="userPopoverMenuWrapper">
-					<div class="icon-more"
+					<button class="icon-more"
 						@click="toggleMenu" />
 					<div :class="{ 'open': openedMenu }" class="popovermenu">
 						<PopoverMenu :menu="userActions" />
